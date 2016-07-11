@@ -165,7 +165,12 @@ class TestComprehensiveCaseFold
         codepoints.each do |code|
           begin
             source = code.encode(encoding) * 5
-            target = "#{test.first_data[code]}#{test.follow_data[code]*4}".encode(encoding)
+            begin
+              target = "#{test.first_data[code]}#{test.follow_data[code]*4}".encode(encoding)
+            rescue Encoding::UndefinedConversionError
+              raise if code =~ /i|I/ # special case for Turkic
+              target = source
+            end
             result = source.send(test.method_name, *test.attributes)
             assert_equal target, result,
               proc{"from #{code*5} (#{source.dump}) expected #{target.dump} but was #{result.dump}"}
@@ -176,7 +181,7 @@ class TestComprehensiveCaseFold
     end
   end
 
-  # temporary test to avoid regression when switching to primitives
+  # test for encodings that don't yet (or will never) deal with non-ASCII characters
   def self.generate_ascii_only_case_mapping_tests (encoding)
     all_tests
     # preselect codepoints to speed up testing for small encodings
@@ -240,11 +245,11 @@ class TestComprehensiveCaseFold
 
   generate_ascii_only_case_mapping_tests 'ISO-8859-2'
   generate_ascii_only_case_mapping_tests 'ISO-8859-3'
-  generate_ascii_only_case_mapping_tests 'ISO-8859-4'
+  generate_case_mapping_tests 'ISO-8859-4'
   generate_ascii_only_case_mapping_tests 'ISO-8859-5'
   generate_ascii_only_case_mapping_tests 'ISO-8859-7'
   generate_ascii_only_case_mapping_tests 'ISO-8859-9'
-  generate_ascii_only_case_mapping_tests 'ISO-8859-10'
+  generate_case_mapping_tests 'ISO-8859-10'
   generate_ascii_only_case_mapping_tests 'ISO-8859-13'
   generate_case_mapping_tests 'ISO-8859-14'
   generate_case_mapping_tests 'ISO-8859-15'

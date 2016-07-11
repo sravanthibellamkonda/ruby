@@ -1085,7 +1085,7 @@ getclockofday(struct timeval *tp)
 
     if (clock_gettime(CLOCK_MONOTONIC, &ts) == 0) {
 	tp->tv_sec = ts.tv_sec;
-	tp->tv_usec = ts.tv_nsec / 1000;
+	tp->tv_usec = (int)(ts.tv_nsec / 1000);
     }
     else
 #endif
@@ -3851,6 +3851,7 @@ rb_wait_for_single_fd(int fd, int events, struct timeval *tv)
     fds.events = (short)events;
 
     do {
+	fds.revents = 0;
 	lerrno = 0;
 	BLOCKING_REGION({
 	    result = ppoll(&fds, 1, timeout, NULL);

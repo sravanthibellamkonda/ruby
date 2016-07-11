@@ -1,3 +1,107 @@
+Mon Jul 11 18:05:40 2016  Martin Duerst  <duerst@it.aoyama.ac.jp>
+
+	* enc/iso_8859_1.c: Moved test for lowercase characters without
+	  uppercase equivalent.
+
+Mon Jul 11 17:49:25 2016  Martin Duerst  <duerst@it.aoyama.ac.jp>
+
+	* enc/iso_8859_4.c, enc/iso_8859_10.c, enc/iso_8859_14.c,
+	  enc/iso_8859_15.c, enc/iso_8859_16.c: Replace case-by-case code with
+	  lookup in ENC_ISO_8859_xx_TO_LOWER_CASE table.
+
+Mon Jul 11 16:00:56 2016  Nobuyoshi Nakada  <nobu@ruby-lang.org>
+
+	* ext/stringio/stringio.c (strio_each, strio_readlines): convert
+	  arguments just once before reading, instead of conversions for
+	  each lines, as r55603.
+
+Sun Jul 10 19:53:41 2016  Martin Duerst  <duerst@it.aoyama.ac.jp>
+
+	* enc/iso_8859_10.c, test/ruby/enc/test_case_comprehensive.rb:
+	  Implement non-ASCII case conversion for ISO-8859-10, by Toya Hosokawa.
+
+Sun Jul 10 19:33:47 2016  Martin Duerst  <duerst@it.aoyama.ac.jp>
+
+	* test/ruby/enc/test_case_comprehensive.rb: Changed testing logic in to
+	  catch unintended modifications of characters that do not have a case
+	  equivalent in the respective encoding.
+	* enc/iso_8859_1.c, enc/iso_8859_15.c: Fixed unintended modifications of
+	  micro sign and y with diaeresis.
+
+Sun Jul 10 17:05:36 2016  Martin Duerst  <duerst@it.aoyama.ac.jp>
+
+	* enc/iso_8859_4.c, test/ruby/enc/test_case_comprehensive.rb:
+	  Implement non-ASCII case conversion for ISO-8859-4, by Kotaro Yoshida.
+
+Sun Jul 10 16:17:47 2016  Martin Duerst  <duerst@it.aoyama.ac.jp>
+
+	* test/ruby/enc/test_case_comprehensive.rb: Fixed a comment
+	  (message belongs to last commit). [ci skip]
+
+Sun Jul 10 14:27:25 2016  Nobuyoshi Nakada  <nobu@ruby-lang.org>
+
+	* util.c (ruby_dtoa): [EXPERIMENTAL] adjust the case that the
+	  Float value is close to the exact but unrepresentable middle
+	  value of two values in the given precision, as r55604.
+
+Sun Jul 10 08:57:20 2016  SHIBATA Hiroshi  <hsbt@ruby-lang.org>
+
+	* thread.c: Fixed implicit conversion error with Apple clang-800.0.31
+
+Sat Jul  9 12:43:09 2016  Shugo Maeda  <shugo@ruby-lang.org>
+
+	* lib/getoptlong.rb: use false instead of FALSE.
+
+Fri Jul  8 21:49:28 2016  Naohisa Goto  <ngotogenome@gmail.com>
+
+	* thread.c (rb_wait_for_single_fd): Clean up fds.revents every time
+	  before calling ppoll(2). [Bug #12575] [ruby-dev:49725]
+
+Fri Jul  8 14:16:48 2016  Shugo Maeda  <shugo@ruby-lang.org>
+
+	* vm_args.c (vm_caller_setup_arg_block): call rb_sym_to_proc()
+	  directly to reduce method dispatch overhead.
+
+Fri Jul  8 08:43:31 2016  Shugo Maeda  <shugo@ruby-lang.org>
+
+	* io.c (rb_io_s_read): add description of pipes to the documentation
+	  of IO.read.
+
+Fri Jul  8 03:54:22 2016  NARUSE, Yui  <naruse@ruby-lang.org>
+
+	* vm_args.c (setup_parameters_complex): don't raise ArgumentError
+	  if an array is given for instance_exec with optional argument.
+	  [ruby-core:76300] [Bug #12568]
+	  https://github.com/rails/rails/pull/25699
+
+Fri Jul  8 00:47:36 2016  NARUSE, Yui  <naruse@ruby-lang.org>
+
+	* vm_eval.c (yield_under): change prototype to get argc/argv.
+
+	* vm_eval.c (specific_eval): change for above.
+
+	* vm_eval.c (rb_obj_instance_exec): avoid object allocation.
+
+	* vm_eval.c (rb_mod_module_exec): ditto.
+
+Thu Jul  7 20:08:37 2016  Shugo Maeda  <shugo@ruby-lang.org>
+
+	* vm_args.c (vm_caller_setup_arg_block): disable symbol block
+	  argument optimization when tail call optimization is enabled,
+	  in order to avoid SEGV.  [ruby-core:76288] [Bug #12565]
+
+Thu Jul  7 16:37:53 2016  Nobuyoshi Nakada  <nobu@ruby-lang.org>
+
+	* numeric.c (flo_round): [EXPERIMENTAL] adjust the case that the
+	  receiver is close to the exact but unrepresentable middle value
+	  of two values in the given precision.
+	  http://d.hatena.ne.jp/hnw/20160702
+
+Thu Jul  7 16:31:07 2016  Nobuyoshi Nakada  <nobu@ruby-lang.org>
+
+	* io.c (rb_io_s_foreach, rb_io_s_readlines): convert arguments
+	  just once before reading, instead of conversions for each lines.
+
 Wed Jul  6 19:54:17 2016  Martin Duerst  <duerst@it.aoyama.ac.jp>
 
 	* enc/iso_8859_14.c, test/ruby/enc/test_case_comprehensive.rb:
@@ -6,7 +110,7 @@ Wed Jul  6 19:54:17 2016  Martin Duerst  <duerst@it.aoyama.ac.jp>
 Wed Jul  6 19:24:48 2016  Martin Duerst  <duerst@it.aoyama.ac.jp>
 
 	* enc/iso_8859_1.c, enc/iso_8859_15.c, enc/iso_8859_16.c:
-	  Allign indenting to onigmo convention.
+	  Align indenting to onigmo convention.
 
 Wed Jul  6 18:59:13 2016  Martin Duerst  <duerst@it.aoyama.ac.jp>
 

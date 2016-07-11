@@ -1,3 +1,4 @@
+
 #if   defined __GNUC__
 #warning use of RClass internals is deprecated
 #elif defined _MSC_VER
